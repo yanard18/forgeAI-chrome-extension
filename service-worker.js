@@ -1,44 +1,58 @@
+importScripts('./aiFetch.js');
+
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.create({
-    id: 'openSidePanel',
-    title: 'Use AI',
-    contexts: ['selection']
-  });
+    chrome.contextMenus.create({
+        id: 'aiMeaning',
+        title: 'ForgeAI - Meaning',
+        contexts: ['selection']
+    });
+
+    chrome.contextMenus.create({
+        id: "aiSimplify",
+        title: "ForgeAI - Simplify",
+        contexts: ['selection']
+    })
 });
 
-var lastSelection = "";
+var aiRes = "";
 
-chrome.contextMenus.onClicked.addListener((info, tab) => {
-  if (info.menuItemId === 'openSidePanel') {
-    // This will open the panel in all the pages on the current window.
-    chrome.sidePanel.open({ windowId: tab.windowId });
-    lastSelection = info.selectionText;
-  }
-
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+    if (info.menuItemId === 'aiMeaning') {
+        chrome.sidePanel.open({ windowId: tab.windowId });
+        await useAIAndShowResult(info.selectionText);
+    }
+else if (info.menuItemId === 'aiSimplify') {
+        chrome.sidePanel.open({ windowId: tab.windowId });
+        await useAIAndShowResult(
+            "Describe the content with spimplifying: "
+            + info.selectionText);
+    }
 });
 
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-  if (message === 'get-user-data') {
-    sendResponse(lastSelection);
-  }
-});
 
-
-/*
-chrome.runtime.onMessage.addListener(async function(request, sender, sendResponse) {
-  if (request.action === 'generateText') {
-    const prompt = request.prompt;
+async function useAIAndShowResult(propmt) {
     const apiKey = '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';
 
-      // Use await within an asynchronous function
+    console.log("Starting...");
+    const res = await aiFetch(propmt, apiKey);
 
-        chrome.sidePanel.setOptions({path: sidePanel});
-      const res = await aiFetch(prompt, apiKey);
+    if (res !== null) {
+        aiRes = res;
+        console.log(res);
+    }
 
-      if (res !== null) {
-        chrome.sidePanel.setOptions({path: sp});
-      }
-  }
+
+    chrome.runtime.sendMessage({
+        name: 'define-word',
+        data: { value: aiRes }
+    });
+
+}
+
+
+chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
+    if (request.action === 'slideBarLoaded') {
+        sendResponse(aiRes);
+    }
 });
-*/
 
