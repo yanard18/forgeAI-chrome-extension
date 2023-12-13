@@ -1,26 +1,17 @@
 {
-	"manifest_version": 2,
 	"name": "ForgeAI Chrome Extension",
-	"version": "1.0",
-	"description": "Generate text using OpenAI API",
-	"browser_action": {
-		"default_popup": "popup.html"
-	},
-	"content_scripts": [
-		{
-			"matches": ["<all_urls>"],
-			"js": ["content.js"],
-			"run_at": "document_idle"
-
-		}
-	],
+	"version": "0.1",
+	"manifest_version": 3,
+	"description": "OpenAI copilot for web.",
 	"background": {
-		"scripts": ["aiFetch.js", "background.js"],
-		"persistent": false
+		"service_worker": "service-worker.js"
+	},
+	"side_panel": {
+		"default_path": "sidepanel.html"
 	},
 	"permissions": [
-		"activeTab",
-		"storage"
+		"sidePanel",
+		"contextMenus",
+		"activeTab"
 	]
 }
-
