@@ -25,9 +25,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		// Send a message to the background script with the selected text as the prompt
 		chrome.runtime.sendMessage({ action: 'generateText', prompt: prompt });
+		
 
 		// For immediate user feedback, you can set the outputDiv with a loading message
 		outputDiv.textContent = 'Generating...';
+
+		const res = await aiFetch(prompt, apiKey);
+		if(res !== null){
+			outputDiv.textContent = res;
+		}
 	});
 
 	saveApiKeyButton.addEventListener('click', function() {

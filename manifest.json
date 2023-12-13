@@ -9,11 +9,15 @@
 	"content_scripts": [
 		{
 			"matches": ["<all_urls>"],
-			"js": ["inject.js"],
+			"js": ["content.js"],
 			"run_at": "document_idle"
 
 		}
 	],
+	"background": {
+		"scripts": ["aiFetch.js", "background.js"],
+		"persistent": false
+	},
 	"permissions": [
 		"activeTab",
 		"storage"
