@@ -14,8 +14,6 @@ chrome.runtime.onInstalled.addListener(() => {
     })
 });
 
-var aiRes = "";
-
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     if (info.menuItemId === 'aiMeaning') {
         chrome.sidePanel.open({ windowId: tab.windowId });
@@ -33,20 +31,15 @@ else if (info.menuItemId === 'aiSimplify') {
 async function useAIAndShowResult(propmt) {
     const apiKey = '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';
 
-    console.log("Starting...");
+    console.log("AI Starting...");
     const res = await aiFetch(propmt, apiKey);
 
     if (res !== null) {
-        aiRes = res;
-        console.log(res);
+        chrome.runtime.sendMessage({
+            name: 'define-word',
+            data: { value: res }
+        });
     }
-
-
-    chrome.runtime.sendMessage({
-        name: 'define-word',
-        data: { value: aiRes }
-    });
-
 }
 
 
