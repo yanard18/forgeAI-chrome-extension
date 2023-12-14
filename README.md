@@ -26,6 +26,15 @@ To install ForgeAI, follow these simple steps:
 4. Click on "Load unpacked" and select the folder where you cloned ForgeAI.
 5. ForgeAI is now installed and ready to supercharge your web browsing experience!
 
+## Getting API Key From OpenAI
+
+1. Go to OpenAI's website (https://www.openai.com).
+2. Sign up for a new account by clicking "Sign Up" or "Get Started" on the homepage.
+3. Access the API documentation on your account.
+4. Follow the instructions to generate your API key specific to your account.
+5. Open the ForgeAI extension in Google Chrome and enter your API key in the settings.
+6. Enjoy enhanced browsing features with ForgeAI's AI copilot, improving your productivity.
+
 ## Notes
 
 ForgeAI is currently in active development, and we are continuously working on enhancing its features and performance. We welcome your feedback, bug reports, and contributions to help us make ForgeAI even better.
