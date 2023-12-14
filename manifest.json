@@ -13,8 +13,10 @@
 		"sidePanel",
 		"contextMenus",
 		"activeTab",
-		"scripting"
+		"scripting",
+		"storage"
 	],
+	"options_page": "options/options.html",
 	"content_scripts": [
 		{
 			"matches": ["<all_urls>"],

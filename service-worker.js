@@ -48,24 +48,22 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
 
 
-async function useAIAndShowResult(propmt) {
-    const apiKey = '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';
+async function useAIAndShowResult(prompt) {
+    chrome.storage.sync.get(['key'], async function (apiKey) {
+        const res = await aiFetch(prompt, apiKey.key);
 
-    console.log("AI starting with the prompt: " + propmt);
-    const res = await aiFetch(propmt, apiKey);
-
-    if (res !== null) {
-        chrome.runtime.sendMessage({
-            name: 'define-word',
-            data: { value: res }
-        });
-    }
+        if (res !== null) {
+            chrome.runtime.sendMessage({
+                name: 'define-word',
+                data: { value: res }
+            });
+        }
+    });
 }
 
 
 chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
     if (request.action === 'generateAiResponse') {
-        console.log(request);
         await useAIAndShowResult(request.input + '\n selected text: ' + request.selection);
     }
 });
