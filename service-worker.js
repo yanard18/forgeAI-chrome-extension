@@ -30,11 +30,11 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     if (info.menuItemId === 'aiMeaning') {
         chrome.sidePanel.open({ windowId: tab.windowId });
-        await useAIAndShowResult(info.selectionText);
+        await aiFetch(info.selectionText);
     }
     else if (info.menuItemId === 'aiSimplify') {
         chrome.sidePanel.open({ windowId: tab.windowId });
-        await useAIAndShowResult(
+        await aiFetch(
             "Describe the content with spimplifying: "
             + info.selectionText);
     }
@@ -62,28 +62,13 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 });
 
 
-
-async function useAIAndShowResult(prompt) {
-    chrome.storage.sync.get(['key'], async function (apiKey) {
-        const res = await aiFetch(prompt, apiKey.key);
-
-        if (res !== null) {
-            chrome.runtime.sendMessage({
-                name: 'define-word',
-                data: { value: res }
-            });
-        }
-    });
-}
-
-
 chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
     if (request.action === 'generateAiResponse') {
         console.log(request);
         if(request.selection !== null)
-            await useAIAndShowResult(request.input + '\n selected text: ' + request.selection);
+            await aiFetch(request.input + '\n selected text: ' + request.selection);
         else
-            await useAIAndShowResult(request.input);
+            await aiFetch(request.input);
     }
 });
 
