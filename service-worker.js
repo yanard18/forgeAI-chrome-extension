@@ -14,9 +14,16 @@ chrome.runtime.onInstalled.addListener(() => {
     })
 
     chrome.contextMenus.create({
+        id: 'aiAskSelection',
+        title: 'ForgeAI - Ask About Selcetion',
+        contexts: ['selection']
+    })
+
+    chrome.contextMenus.create({
         id: 'aiAsk',
         title: 'ForgeAI - Ask',
-        contexts: ['selection']
+        contexts: ['all']
+
     })
 });
 
@@ -31,7 +38,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
             "Describe the content with spimplifying: "
             + info.selectionText);
     }
-    else if (info.menuItemId === 'aiAsk') {
+    else if (info.menuItemId === 'aiAskSelection') {
         chrome.sidePanel.open({ windowId: tab.windowId });
 
         chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -40,7 +47,15 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
                 (response) {
             });
         })
+    } else if (info.menuItemId === 'aiAsk') {
+        chrome.sidePanel.open({ windowId: tab.windowId });
 
+        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+            var activeTab = tabs[0];
+            chrome.tabs.sendMessage(activeTab.id, { message: null}, function
+                (response) {
+            });
+        })
 
 
     }
@@ -64,7 +79,11 @@ async function useAIAndShowResult(prompt) {
 
 chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
     if (request.action === 'generateAiResponse') {
-        await useAIAndShowResult(request.input + '\n selected text: ' + request.selection);
+        console.log(request);
+        if(request.selection !== null)
+            await useAIAndShowResult(request.input + '\n selected text: ' + request.selection);
+        else
+            await useAIAndShowResult(request.input);
     }
 });
 

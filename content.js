@@ -27,12 +27,17 @@ chrome.runtime.onMessage.addListener((message, sender, senderResponse) => {
     generateButton.textContent = "Generate";
     popup.appendChild(generateButton);
 
+    var cancelBtn = document.createElement("button");
+    cancelBtn.id = "cacnelBtn";
+    cancelBtn.textContent = "Cancel";
+    popup.appendChild(cancelBtn);
+
     document.body.appendChild(popup);
 
-    generateButton.addEventListener('click', function() {
+    generateButton.addEventListener('click', function () {
 
-      // Remove the popup immediately after clicking the button
-      document.getElementById("inputPopup").remove();
+        // Remove the popup immediately after clicking the button
+        document.getElementById("inputPopup").remove();
 
         chrome.runtime.sendMessage({
             action: 'generateAiResponse',
@@ -40,6 +45,10 @@ chrome.runtime.onMessage.addListener((message, sender, senderResponse) => {
             input: popupInput.value
         });
 
+    });
+
+    cancelBtn.addEventListener('click', function () {
+        document.getElementById("inputPopup").remove();
     });
 
 });
